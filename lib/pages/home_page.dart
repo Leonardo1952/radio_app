@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:radio_app/models/radio.dart';
 import 'package:radio_app/utils/ai_util.dart';
@@ -54,34 +55,44 @@ class _HomePageState extends State<HomePage> {
             enlargeCenterPage: true,
             itemBuilder: (context, index) {
               final rad = radios[index];
-
               return VxBox(
-                child: ZStack(
-                  [
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: VStack(
-                        [
-                          rad.name.text.white.bold.make(),
-                          5.heightBox,
-                          rad.tagline.text.sm.white.semiBold.make()
-                        ],
-                        crossAlignment: CrossAxisAlignment.center,
-                      ),
+                      child: ZStack(
+                [
+                  Positioned(
+                      top: 0.0,
+                      right: 0.0,
+                      child: VxBox(
+                        child: rad.category.text.uppercase.white.make(),
+                      )
+                          .height(40)
+                          .black
+                          .alignCenter
+                          .withRounded(value: 10.0)
+                          .make()),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: VStack(
+                      [
+                        rad.name.text.white.bold.make(),
+                        5.heightBox,
+                        rad.tagline.text.sm.white.semiBold.make()
+                      ],
+                      crossAlignment: CrossAxisAlignment.center,
                     ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: [
-                          const Icon(
-                            CupertinoIcons.play_circle,
-                            color: Colors.white,
-                          ),
-                          10.heightBox,
-                          "Double tap to play".text.gray300.make()
-                        ].vStack())
-                  ],
-                ),
-              )
+                  ),
+                  Align(
+                      alignment: Alignment.center,
+                      child: [
+                        const Icon(
+                          CupertinoIcons.play_circle,
+                          color: Colors.white,
+                        ),
+                        10.heightBox,
+                        "Double tap to play".text.gray300.make()
+                      ].vStack())
+                ],
+              ))
+                  .clip(Clip.antiAlias)
                   .bgImage(
                     DecorationImage(
                         image: NetworkImage(rad.image),
@@ -92,10 +103,15 @@ class _HomePageState extends State<HomePage> {
                   .border(color: Colors.black, width: 5.0)
                   .withRounded(value: 60.0)
                   .make()
+                  .onInkDoubleTap(() {})
                   .p16()
                   .centered();
             },
-          ),
+          ).centered(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Icon(CupertinoIcons.stop_circle),
+          ).pOnly(bottom: context.percentHeight)
         ],
         fit: StackFit.expand,
       ),
